@@ -66,6 +66,7 @@ namespace motekarteknologi.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddEditLine(Guid? ID, SalesOrderLine salesOrderLine)
         {
             try
