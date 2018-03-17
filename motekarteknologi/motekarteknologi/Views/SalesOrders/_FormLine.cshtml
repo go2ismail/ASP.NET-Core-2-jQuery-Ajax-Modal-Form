@@ -1,0 +1,38 @@
+﻿@model motekarteknologi.Models.SalesOrderLine
+
+<form asp-action="AddEditLine">
+    @await Html.PartialAsync("_ModalHeader", new ModalHeader
+    {
+        Heading = String.Format("{0} Sales Order Line", @Model.ID == Guid.Empty ? "Add" : "Edit")
+    })
+
+    <div class="modal-body form-horizontal">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="ID" />
+        <input type="hidden" asp-for="SalesOrderID"/>
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="form-group col-lg-10">
+                    <label asp-for="ProductID" class="control-label"></label>
+                    <select asp-for="ProductID" class="form-control" asp-items="ViewBag.ProductID"></select>
+                    <span asp-validation-for="ProductID" class="text-danger"></span>
+                </div>
+                <div class="form-group col-lg-10">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group col-lg-10">
+                    <label asp-for="Qty" class="control-label"></label>
+                    <input asp-for="Qty" class="form-control" />
+                    <span asp-validation-for="Qty" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+
+    @await Html.PartialAsync("_ModalFooter", new ModalFooter { })
+</form>
+@await Html.PartialAsync("_ValidationScriptsPartial")

@@ -19,6 +19,80 @@ namespace motekarteknologi.Controllers
             _context = context;
         }
 
+
+        [HttpGet]
+        public IActionResult DeleteLine(Guid ID)
+        {
+            SalesOrderLine salesOrderLine = _context.SalesOrderLine
+                .Where(x => x.ID.Equals(ID)).FirstOrDefault();
+            string model = Newtonsoft.Json.JsonConvert.SerializeObject(salesOrderLine);
+            return PartialView("_ModalDelete", model: model);
+        }
+        
+        [HttpPost, ActionName("DeleteLine")]
+        public IActionResult DeleteLineConfirmed(Guid ID)
+        {
+
+            var line = _context.SalesOrderLine
+                .Where(x => x.ID.Equals(ID)).FirstOrDefault();
+
+            var salesOrderID = line.SalesOrderID;
+
+            _context.SalesOrderLine.Remove(line);
+
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Edit), new { ID = salesOrderID });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> AddEditLine(Guid? ID)
+        {
+            SalesOrderLine line = new SalesOrderLine();
+            ViewData["ProductID"] = new SelectList(_context.Product, "ID", "Name");
+            
+            if (ID.HasValue)
+            {
+                line = await _context.SalesOrderLine
+                    .Where(x => x.ID.Equals(ID)).FirstOrDefaultAsync();
+            } else
+            {
+                line.SalesOrderID = (Guid)TempData["SalesOrderID"];
+            }
+
+            TempData["SalesOrderID"] = line.SalesOrderID;
+
+            return PartialView("~/Views/SalesOrders/_FormLine.cshtml", line);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddEditLine(Guid? ID, SalesOrderLine salesOrderLine)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    bool isNew = ID.Equals(Guid.Empty);
+                    if (isNew)
+                    {
+                        salesOrderLine.ID = Guid.NewGuid();
+                        _context.Add(salesOrderLine);
+                    } else
+                    {
+                        _context.Update(salesOrderLine);
+                    }
+                    await _context.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+
+                throw ex;
+            }
+
+            return RedirectToAction(nameof(Edit), new { ID = salesOrderLine.SalesOrderID });
+        }
+
         // GET: SalesOrders
         public async Task<IActionResult> Index()
         {
@@ -73,8 +147,14 @@ namespace motekarteknologi.Controllers
             {
                 return NotFound();
             }
+            
+            TempData["SalesOrderID"] = id;
 
-            var salesOrder = await _context.SalesOrder.SingleOrDefaultAsync(m => m.ID == id);
+            var salesOrder = await _context.SalesOrder
+                .Include(x => x.Lines)
+                    .ThenInclude(x => x.Product)
+                .SingleOrDefaultAsync(m => m.ID == id);
+
             if (salesOrder == null)
             {
                 return NotFound();

@@ -216,6 +216,7 @@ namespace motekarteknologi.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(200);
 
                     b.Property<Guid>("ProductID");

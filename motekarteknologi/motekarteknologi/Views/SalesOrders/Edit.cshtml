@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Edit";
+    var modalID = "sales-order-line";
+    var areaModalID = "sales-order-line-label";
 }
 
 <h2>Edit</h2>
@@ -33,7 +35,64 @@
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+<div>
+    <h3>Sales Order Lines</h3>
+</div>
+<div>
+    <div class="btn-group">
+        <a id="createLine" data-toggle="modal" asp-action="AddEditLine" data-target="#@modalID" class="btn btn-primary">
+            <i class="glyphicon glyphicon-plus"></i>  Add Line
+        </a>
+    </div>
+</div>
+<div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Product
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Qty
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Lines)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Product.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Qty)
+                    </td>
+                    <td>
+                        <a id="editLine" data-toggle="modal" asp-action="AddEditLine" data-target="#@modalID" asp-route-id="@item.ID">Edit</a> |
+                        <a data-toggle="modal" asp-action="DeleteLine" data-target="#@modalID" asp-route-id="@item.ID">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+@await Html.PartialAsync("_Modal", new Modal
+{
+    ID = modalID,
+    AreaLabelID = areaModalID,
+    Size = ModalSize.Medium
+})
 
 @section Scripts {
+
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{await Html.RenderPartialAsync("_ModalScriptsInit", modalID);}
+
 }

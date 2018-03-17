@@ -16,7 +16,9 @@ namespace motekarteknologi.Models
         public Guid ProductID { get; set; }
         public Product Product { get; set; }
         [StringLength(200)]
+        [Required]
         public string Description { get; set; }
+        [Required]
         public int Qty { get; set; }
     }
 }

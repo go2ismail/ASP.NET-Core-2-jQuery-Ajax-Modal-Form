@@ -28,3 +28,9 @@
     <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+<div>
+    <h3>Sales Order Lines</h3>
+</div>
+<div>
+    @Html.Partial("~/Views/SalesOrderLines/Index.cshtml", Model.Lines)
+</div>

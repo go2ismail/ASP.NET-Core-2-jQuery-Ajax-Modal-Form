@@ -11,7 +11,7 @@ using System;
 namespace motekarteknologi.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20180317024500_awal")]
+    [Migration("20180317042448_awal")]
     partial class awal
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -217,6 +217,7 @@ namespace motekarteknologi.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasMaxLength(200);
 
                     b.Property<Guid>("ProductID");

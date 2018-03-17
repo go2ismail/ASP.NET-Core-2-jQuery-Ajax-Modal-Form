@@ -184,7 +184,7 @@ namespace motekarteknologi.Migrations
                 columns: table => new
                 {
                     ID = table.Column<Guid>(nullable: false),
-                    Description = table.Column<string>(maxLength: 200, nullable: true),
+                    Description = table.Column<string>(maxLength: 200, nullable: false),
                     ProductID = table.Column<Guid>(nullable: false),
                     Qty = table.Column<int>(nullable: false),
                     SalesOrderID = table.Column<Guid>(nullable: false)
